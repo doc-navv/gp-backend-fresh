@@ -37,82 +37,51 @@ export default async function handler(req, res) {
       });
     }
     
-    const prompt = `Act as an experienced Australian General Practitioner creating a GP Chronic Condition Management Plan (GPCCMP) under the current MBS guidelines (effective from July 1, 2025).
+const prompt = `Act as an experienced Australian General Practitioner creating a GP Chronic Condition Management Plan (GPCCMP) under the current MBS guidelines (effective from July 1, 2025).
 
-I will provide you with a list of the patient's chronic conditions.
+IMPORTANT: Generate the response as clean HTML tables that will display properly in web browsers and export cleanly to Word/PDF format.
 
-Generate structured output in Microsoft Word format with clean, black and white table formatting:
+Create exactly this structure:
 
-## 📋 Table 1: GP Chronic Condition Management Plan
+<div style="font-family: Arial, sans-serif; max-width: 800px;">
+<h2 style="text-align: center; color: #2c3e50;">GP Chronic Condition Management Plan</h2>
+<p style="text-align: center; color: #7f8c8d;">${new Date().toLocaleDateString('en-AU')}</p>
 
-Create a Word table with the following exact format:
+<h3 style="color: #2980b9;">📋 Table 1: GP Chronic Condition Management Plan</h3>
+<table style="width: 100%; border-collapse: collapse; margin: 20px 0; border: 2px solid #34495e;">
+<thead>
+<tr style="background-color: #ecf0f1;">
+<th style="border: 1px solid #bdc3c7; padding: 12px; text-align: left; font-weight: bold;">Patient problems/needs/relevant conditions</th>
+<th style="border: 1px solid #bdc3c7; padding: 12px; text-align: left; font-weight: bold;">Goals – changes to be achieved</th>
+<th style="border: 1px solid #bdc3c7; padding: 12px; text-align: left; font-weight: bold;">Required treatments and services including patient actions</th>
+<th style="border: 1px solid #bdc3c7; padding: 12px; text-align: left; font-weight: bold;">Arrangements for treatments/services (when, who, contact details)</th>
+</tr>
+</thead>
+<tbody>
+[Generate 2-4 rows based on conditions provided]
+</tbody>
+</table>
 
-| Patient problems/needs/relevant conditions | Goals – changes to be achieved | Required treatments and services including patient actions | Arrangements for treatments/services (when, who, contact details) |
-|---|---|---|---|
-| [Condition 1] | [SMART goal with timeframe] | [Planned interventions, services, lifestyle advice, patient actions] | [Referrals, follow-up schedule, contact details] |
-| [Condition 2] | [SMART goal with timeframe] | [Planned interventions, services, lifestyle advice, patient actions] | [Referrals, follow-up schedule, contact details] |
-| [Condition 3] | [SMART goal with timeframe] | [Planned interventions, services, lifestyle advice, patient actions] | [Referrals, follow-up schedule, contact details] |
+<h3 style="color: #2980b9;">📋 Table 2: Allied Health Professional Arrangements</h3>
+<table style="width: 100%; border-collapse: collapse; margin: 20px 0; border: 2px solid #34495e;">
+<thead>
+<tr style="background-color: #ecf0f1;">
+<th style="border: 1px solid #bdc3c7; padding: 12px; text-align: left; font-weight: bold;">Goals – changes to be achieved</th>
+<th style="border: 1px solid #bdc3c7; padding: 12px; text-align: left; font-weight: bold;">Required treatments and services including patient actions</th>
+<th style="border: 1px solid #bdc3c7; padding: 12px; text-align: left; font-weight: bold;">Arrangements for treatments/services (when, who, contact details)</th>
+</tr>
+</thead>
+<tbody>
+[Generate 3-5 rows of allied health goals]
+</tbody>
+</table>
 
-## 📋 Table 2: Allied Health Professional Arrangements
+<p style="text-align: center; font-size: 12px; color: #7f8c8d; margin-top: 30px;">
+<strong>Generated under MBS Guidelines effective July 1, 2025</strong><br>
+This is a clinical decision support tool. All generated content must be reviewed and finalized by the treating practitioner.
+</p>
+</div>
 
-Create a Word table with this exact format:
+Generate complete HTML tables with actual patient-specific content for these conditions: ${conditions}
 
-| Goals – changes to be achieved | Required treatments and services including patient actions | Arrangements for treatments/services (when, who, contact details) |
-|---|---|---|
-| 1. [SMART allied health goal] | [Specific interventions and patient actions] | [Provider type, frequency, duration, contact method] |
-| 2. [SMART allied health goal] | [Specific interventions and patient actions] | [Provider type, frequency, duration, contact method] |
-| 3. [SMART allied health goal] | [Specific interventions and patient actions] | [Provider type, frequency, duration, contact method] |
-| 4. [SMART allied health goal] | [Specific interventions and patient actions] | [Provider type, frequency, duration, contact method] |
-| 5. [SMART allied health goal] | [Specific interventions and patient actions] | [Provider type, frequency, duration, contact method] |
-
-**Requirements:**
-- Each goal must be SMART (Specific, Measurable, Achievable, Relevant, Time-bound) with clear 3-6 month timeframes
-- Include evidence-based interventions appropriate to each condition
-- Specify relevant lifestyle modifications and clear patient responsibilities
-- Include appropriate allied health referrals (physiotherapy, dietitian, podiatry, etc.)
-- Add specific review and monitoring schedules in the 'Arrangements' column
-- Use professional medical terminology appropriate for MBS documentation
-- Keep each cell concise but comprehensive for clinical practice
-- Include document header: "GP Chronic Condition Management Plan - [Date]"
-- Add footer with: "Generated under MBS Guidelines effective July 1, 2025"
-
-My conditions are: ${conditions}`;
-    
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [{ 
-          role: 'user', 
-          content: prompt 
-        }],
-        temperature: 0.3,
-        max_tokens: 4000,
-      }),
-    });
-    
-    if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.error?.message || 'OpenAI API error');
-    }
-    
-    const data = await response.json();
-    
-    return res.status(200).json({
-      success: true,
-      carePlan: data.choices[0].message.content,
-      timestamp: new Date().toISOString()
-    });
-    
-  } catch (error) {
-    console.error('API Error:', error);
-    return res.status(500).json({ 
-      success: false, 
-      error: 'Failed to generate care plan. Please try again.' 
-    });
-  }
-}
+Each table cell should contain complete, professional medical content. Use SMART goals with specific timeframes (3-6 months). Include specific referral details, contact information, and follow-up schedules.`;
