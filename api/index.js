@@ -39,94 +39,64 @@ export default async function handler(req, res) {
     
     const prompt = `Act as an experienced Australian General Practitioner creating a GP Chronic Condition Management Plan (GPCCMP) under the current MBS guidelines (effective from July 1, 2025).
 
-Generate the response as clean HTML tables that will display properly in web browsers and export cleanly to Word/PDF format.
+Generate the response in this EXACT format:
 
-Create exactly this structure:
+<div style="font-family: Arial, sans-serif; max-width: 100%; padding: 20px;">
 
-<div style="font-family: Arial, sans-serif; max-width: 100%; overflow-x: auto;">
-<h2 style="text-align: center; color: #2c3e50; margin-bottom: 10px;">GP Chronic Condition Management Plan</h2>
-<p style="text-align: center; color: #7f8c8d; margin-bottom: 20px;">${new Date().toLocaleDateString('en-AU')}</p>
+<h2 style="text-align: center; color: #2c3e50; margin-bottom: 5px;">GP Chronic Condition Management Plan – ${new Date().toLocaleDateString('en-AU', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '/')}</h2>
+
+<p style="text-align: center; color: #7f8c8d; margin-bottom: 30px; font-size: 14px;">Generated under MBS Guidelines effective July 1, 2025</p>
 
 <h3 style="color: #2980b9; margin-bottom: 15px;">📋 Table 1: GP Chronic Condition Management Plan</h3>
-<div style="overflow-x: auto; margin-bottom: 30px;">
-<table style="width: 100%; min-width: 800px; border-collapse: collapse; margin: 20px 0; border: 2px solid #34495e;">
-<thead>
+
+<table style="width: 100%; border-collapse: collapse; border: 2px solid #34495e; margin-bottom: 30px;">
 <tr style="background-color: #ecf0f1;">
-<th style="border: 1px solid #bdc3c7; padding: 12px; text-align: left; font-weight: bold; min-width: 180px;">Patient problems/needs/relevant conditions</th>
-<th style="border: 1px solid #bdc3c7; padding: 12px; text-align: left; font-weight: bold; min-width: 200px;">Goals – changes to be achieved</th>
-<th style="border: 1px solid #bdc3c7; padding: 12px; text-align: left; font-weight: bold; min-width: 250px;">Required treatments and services including patient actions</th>
-<th style="border: 1px solid #bdc3c7; padding: 12px; text-align: left; font-weight: bold; min-width: 200px;">Arrangements for treatments/services (when, who, contact details)</th>
+<td style="border: 1px solid #bdc3c7; padding: 12px; font-weight: bold;">Patient problems / needs / relevant conditions</td>
+<td style="border: 1px solid #bdc3c7; padding: 12px; font-weight: bold;">Goals – changes to be achieved</td>
+<td style="border: 1px solid #bdc3c7; padding: 12px; font-weight: bold;">Required treatments and services including patient actions</td>
+<td style="border: 1px solid #bdc3c7; padding: 12px; font-weight: bold;">Arrangements for treatments/services (when, who, contact details)</td>
 </tr>
-</thead>
-<tbody>
 
-For each condition provided, create table rows with this exact format:
+For each condition provided, generate table rows using this exact format:
 <tr>
-<td style="border: 1px solid #bdc3c7; padding: 12px; vertical-align: top;"><strong>[Specific condition name]</strong></td>
-<td style="border: 1px solid #bdc3c7; padding: 12px; vertical-align: top;">[SMART goal with specific timeframe - 3 to 6 months]</td>
-<td style="border: 1px solid #bdc3c7; padding: 12px; vertical-align: top;">
-• [Treatment/intervention 1]<br>
-• [Treatment/intervention 2]<br>
-• [Patient education/actions]<br>
-• [Lifestyle modifications]
-</td>
-<td style="border: 1px solid #bdc3c7; padding: 12px; vertical-align: top;">
-• [Referral details with contact info]<br>
-• [Follow-up schedule]<br>
-• [Monitoring arrangements]
-</td>
+<td style="border: 1px solid #bdc3c7; padding: 10px; vertical-align: top;">[Condition with specific clinical details - e.g., "Type 2 Diabetes Mellitus – suboptimal glycaemic control (HbA1c 8.2%)"]</td>
+<td style="border: 1px solid #bdc3c7; padding: 10px; vertical-align: top;">[SMART goal with specific target and 3-6 month timeframe]</td>
+<td style="border: 1px solid #bdc3c7; padding: 10px; vertical-align: top;">- [Treatment 1]<br>- [Treatment 2]<br>- [Patient education/actions]<br>- [Lifestyle modifications]<br>- [Preventive care]</td>
+<td style="border: 1px solid #bdc3c7; padding: 10px; vertical-align: top;">- [GP: review schedule]<br>- [Specialist: type and frequency]<br>- [Allied health: type and frequency]<br>- [Investigations: type and frequency]<br>- [Other services: type and frequency]</td>
 </tr>
 
-</tbody>
 </table>
-</div>
 
 <h3 style="color: #2980b9; margin-bottom: 15px;">📋 Table 2: Allied Health Professional Arrangements</h3>
-<div style="overflow-x: auto; margin-bottom: 30px;">
-<table style="width: 100%; min-width: 700px; border-collapse: collapse; margin: 20px 0; border: 2px solid #34495e;">
-<thead>
+
+<table style="width: 100%; border-collapse: collapse; border: 2px solid #34495e; margin-bottom: 30px;">
 <tr style="background-color: #ecf0f1;">
-<th style="border: 1px solid #bdc3c7; padding: 12px; text-align: left; font-weight: bold; min-width: 200px;">Goals – changes to be achieved</th>
-<th style="border: 1px solid #bdc3c7; padding: 12px; text-align: left; font-weight: bold; min-width: 250px;">Required treatments and services including patient actions</th>
-<th style="border: 1px solid #bdc3c7; padding: 12px; text-align: left; font-weight: bold; min-width: 200px;">Arrangements for treatments/services (when, who, contact details)</th>
+<td style="border: 1px solid #bdc3c7; padding: 12px; font-weight: bold;">Goals – changes to be achieved</td>
+<td style="border: 1px solid #bdc3c7; padding: 12px; font-weight: bold;">Required treatments and services including patient actions</td>
+<td style="border: 1px solid #bdc3c7; padding: 12px; font-weight: bold;">Arrangements for treatments/services (when, who, contact details)</td>
 </tr>
-</thead>
-<tbody>
 
-Create 3-5 allied health goals with this format:
+Generate 3-5 allied health goals using this exact format:
 <tr>
-<td style="border: 1px solid #bdc3c7; padding: 12px; vertical-align: top;">[SMART allied health goal]</td>
-<td style="border: 1px solid #bdc3c7; padding: 12px; vertical-align: top;">
-• [Specific intervention]<br>
-• [Patient responsibilities]<br>
-• [Expected outcomes]
-</td>
-<td style="border: 1px solid #bdc3c7; padding: 12px; vertical-align: top;">
-• [Provider type and contact details]<br>
-• [Frequency and duration]<br>
-• [Review schedule]
-</td>
+<td style="border: 1px solid #bdc3c7; padding: 10px; vertical-align: top;">[Specific SMART goal with timeframe]</td>
+<td style="border: 1px solid #bdc3c7; padding: 10px; vertical-align: top;">- [Patient action 1]<br>- [Patient action 2]<br>- [Patient responsibility 3]</td>
+<td style="border: 1px solid #bdc3c7; padding: 10px; vertical-align: top;">[Professional type]: [frequency and duration], [follow-up method]</td>
 </tr>
 
-</tbody>
 </table>
+
 </div>
 
-<p style="text-align: center; font-size: 12px; color: #7f8c8d; margin-top: 30px;">
-<strong>Generated under MBS Guidelines effective July 1, 2025</strong><br>
-This is a clinical decision support tool. All generated content must be reviewed and finalized by the treating practitioner.
-</p>
-</div>
+IMPORTANT FORMATTING RULES:
+1. Use generic professional titles (GP, Dietitian, Diabetes Educator, Exercise Physiologist, etc.) - NO specific names
+2. Use generic contact arrangements (monthly sessions, fortnightly visits, phone follow-up) - NO phone numbers or addresses
+3. Include specific clinical targets and timeframes in goals
+4. Use bullet points with "- " format in treatment columns
+5. Keep arrangements professional but generic (e.g., "GP: review 3-monthly, phone follow-up for blood results")
+6. Include relevant investigations and monitoring schedules
+7. Base content on Australian clinical guidelines and MBS requirements
 
-Requirements:
-- Generate complete HTML tables with actual patient-specific content
-- Use SMART goals with specific timeframes (3-6 months)
-- Include specific referral details and contact information
-- Add follow-up schedules and monitoring arrangements
-- Use evidence-based interventions appropriate for Australian clinical practice
-- Ensure compliance with MBS chronic disease management requirements
-
-Patient conditions: ${conditions}`;
+Patient conditions to address: ${conditions}`;
     
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
