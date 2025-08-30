@@ -1,5 +1,4 @@
 export default async function handler(req, res) {
-  // CORS headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -33,112 +32,12 @@ export default async function handler(req, res) {
     if (!apiKey) {
       return res.status(500).json({ 
         success: false, 
-        error: 'OpenAI API key not configured' 
+        error: 'OpenAI API key not configured - please add OPENAI_API_KEY to environment variables' 
       });
     }
     
-    const prompt = `Act as an experienced Australian General Practitioner creating a GP Chronic Condition Management Plan (GPCCMP) under the current MBS guidelines (effective from July 1, 2025).
-
-Generate clean, professional HTML tables optimized for both desktop and mobile viewing:
-
-<div class="care-plan-document">
-<div class="header-section">
-<h2>GP Chronic Condition Management Plan</h2>
-<p class="date-stamp">${new Date().toLocaleDateString('en-AU')}</p>
-</div>
-
-<div class="table-section">
-<h3>📋 Table 1: GP Chronic Condition Management Plan</h3>
-<div class="table-responsive">
-<table class="care-plan-table">
-<thead>
-<tr>
-<th class="col-condition">Patient problems/needs/relevant conditions</th>
-<th class="col-goals">Goals – changes to be achieved</th>
-<th class="col-treatments">Required treatments and services including patient actions</th>
-<th class="col-arrangements">Arrangements for treatments/services (when, who, contact details)</th>
-</tr>
-</thead>
-<tbody>
-
-Generate 2-4 table rows based on the conditions, using this format:
-<tr>
-<td class="condition-cell"><strong>[Condition Name]</strong></td>
-<td class="goals-cell">[SMART goal with 3-6 month timeframe]</td>
-<td class="treatments-cell">
-<ul class="treatment-list">
-<li>[Treatment/intervention 1]</li>
-<li>[Treatment/intervention 2]</li>
-<li>[Patient education/actions]</li>
-<li>[Lifestyle modifications]</li>
-</ul>
-</td>
-<td class="arrangements-cell">
-<ul class="arrangement-list">
-<li>[Referral with contact info]</li>
-<li>[Follow-up schedule]</li>
-<li>[Monitoring arrangements]</li>
-</ul>
-</td>
-</tr>
-
-</tbody>
-</table>
-</div>
-</div>
-
-<div class="table-section">
-<h3>📋 Table 2: Allied Health Professional Arrangements</h3>
-<div class="table-responsive">
-<table class="care-plan-table">
-<thead>
-<tr>
-<th class="col-allied-goals">Goals – changes to be achieved</th>
-<th class="col-allied-treatments">Required treatments and services including patient actions</th>
-<th class="col-allied-arrangements">Arrangements for treatments/services (when, who, contact details)</th>
-</tr>
-</thead>
-<tbody>
-
-Generate 3-5 allied health goals:
-<tr>
-<td class="allied-goals-cell">[SMART allied health goal]</td>
-<td class="allied-treatments-cell">
-<ul class="treatment-list">
-<li>[Specific intervention]</li>
-<li>[Patient responsibilities]</li>
-<li>[Expected outcomes]</li>
-</ul>
-</td>
-<td class="allied-arrangements-cell">
-<ul class="arrangement-list">
-<li>[Provider type and contact]</li>
-<li>[Frequency and duration]</li>
-<li>[Review schedule]</li>
-</ul>
-</td>
-</tr>
-
-</tbody>
-</table>
-</div>
-</div>
-
-<div class="footer-section">
-<p><strong>Generated under MBS Guidelines effective July 1, 2025</strong></p>
-<p><em>This is a clinical decision support tool. All generated content must be reviewed and finalized by the treating practitioner.</em></p>
-</div>
-</div>
-
-Requirements:
-- Generate complete, evidence-based medical content
-- Use SMART goals with specific 3-6 month timeframes  
-- Include realistic Australian healthcare provider contacts
-- Add specific follow-up schedules and monitoring plans
-- Ensure MBS chronic disease management compliance
-- Use professional medical terminology appropriate for GPs
-
-Patient conditions: ${conditions}`;
+    console.log('API Key exists:', !!apiKey);
+    console.log('Conditions received:', conditions);
     
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
@@ -147,22 +46,26 @@ Patient conditions: ${conditions}`;
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: 'gpt-3.5-turbo',
         messages: [{ 
           role: 'user', 
-          content: prompt 
+          content: `Create a simple GP care plan for: ${conditions}` 
         }],
         temperature: 0.3,
-        max_tokens: 4000,
+        max_tokens: 1000,
       }),
     });
     
+    console.log('OpenAI Response Status:', response.status);
+    
     if (!response.ok) {
       const errorData = await response.json();
-      throw new Error(errorData.error?.message || 'OpenAI API error');
+      console.error('OpenAI Error:', errorData);
+      throw new Error(`OpenAI API error: ${errorData.error?.message || 'Unknown error'}`);
     }
     
     const data = await response.json();
+    console.log('Success! Generated care plan');
     
     return res.status(200).json({
       success: true,
@@ -171,10 +74,10 @@ Patient conditions: ${conditions}`;
     });
     
   } catch (error) {
-    console.error('API Error:', error);
+    console.error('Full Error:', error);
     return res.status(500).json({ 
       success: false, 
-      error: 'Failed to generate care plan. Please try again.' 
+      error: `Failed to generate care plan: ${error.message}` 
     });
   }
 }
