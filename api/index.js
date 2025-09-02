@@ -105,7 +105,7 @@ Patient conditions to address: ${conditions}`;
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'gpt-5-nano',
+        model: 'gpt-5 nano',
         messages: [{ 
           role: 'user', 
           content: prompt 
