@@ -45,7 +45,7 @@ Generate the response in this EXACT format:
 
 <h2 style="text-align: center; color: #2c3e50; margin-bottom: 5px;">GP Chronic Condition Management Plan – ${new Date().toLocaleDateString('en-AU', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '/')}</h2>
 
-<p style="text-align: center; color: #7f8c8d; margin-bottom: 30px; font-size: 14px;">Generated under MBS Guidelines effective July 1, 2025</p>
+<p style="text-align: center; color: #7f8c8d; margin-bottom: 30px; font-size: 14px;">Based content on Australian clinical guidelines</p>
 
 <h3 style="color: #2980b9; margin-bottom: 15px;">📋 Table 1: GP Chronic Condition Management Plan</h3>
 
